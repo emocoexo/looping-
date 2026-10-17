@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#111218"><title>Loop Studio — Buat momen terus berputar</title><link rel="stylesheet" href="/style.css"><script type="module" src="/app.js"></script></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="Loop Studio beranda"><span class="brand-icon">∞</span><span>loop<span class="brand-light">studio</span><sup>●</sup></span></a>
+  <div class="nav-label">WORKSPACE</div>
+  <div class="nav-item active"><span>▣</span> Video looper <span class="nav-dot"></span></div>
+  <div class="sidebar-note"><span class="note-icon">✧</span><strong>Momen singkat.<br>Kemungkinan tak terbatas.</strong><p>Ubah video favoritmu menjadi loop yang ingin ditonton lagi.</p><div class="note-line"></div><span class="small-label">MADE FOR YOUR CREATIVITY</span></div>
+  <div class="sidebar-bottom"><span class="status-dot"></span> Ruang kreatifmu <span>v1.0</span></div>
+</aside>
+<div class="workspace">
+  <header class="topbar"><div>Workspace <span>/</span> <strong>Video looper</strong></div><span class="local-badge"><span class="status-dot"></span> Tanpa akun</span></header>
+  <main>
+    <div class="page-heading"><div><div class="eyebrow">REPEAT THE GOOD PARTS</div><h1>Video looper<span>.</span></h1><p>Satu momen bagus. Putar lagi, dan lagi.</p></div><button id="reset" class="button secondary" disabled><span>↺</span> Mulai baru</button></div>
+    <div class="editor-grid">
+      <section class="editor-column" aria-label="Editor video">
+        <div class="preview-card">
+          <div class="card-header"><span><span class="tiny-icon">▻</span> Pratinjau video</span><span id="video-badge" class="small-label">BELUM ADA VIDEO</span></div>
+          <div id="dropzone" class="preview-stage">
+            <div id="empty-state" class="empty-state"><div class="orbit-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="upload-art"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg></div><span class="spark spark-one">✧</span><span class="spark spark-two">+</span></div><h2>Mulai dengan sebuah video</h2><p>Tarik video ke sini, atau pilih dari perangkatmu</p><button id="choose" class="button primary"><span>＋</span> Pilih video</button><div class="file-hint">MP4, MOV, WebM <span>·</span> Maks. 500 MB</div></div>
+            <video id="video" playsinline preload="metadata" hidden></video><button id="change" class="button change-button" hidden>Ganti video</button>
+          </div>
+          <div class="player-bar"><button id="play" class="play-button" aria-label="Putar video" disabled>▶︎</button><span id="play-time" class="mono">00:00.0 <span>/ 00:00.0</span></span><div class="player-spacer"></div><span id="loop-badge" class="loop-badge">∞ <span>Loop aktif</span></span><button id="sound" class="icon-button" aria-label="Bisukan audio" disabled>♪</button></div>
+        </div>
+        <div class="timeline-card"><div class="card-header"><span><span class="tiny-icon">⌁</span> Rentang video</span><button id="full-range" class="text-button" disabled>Gunakan seluruh video</button></div><div class="timeline-body"><div class="ruler"><span id="ruler-start">00:00</span><span id="ruler-mid">00:00</span><span id="ruler-end">00:00</span></div><div id="track" class="timeline-track"><div id="selection" class="timeline-selection"><span>‖</span><span id="selection-label">Pilih video untuk memulai</span><span>‖</span></div></div><div class="range-sliders"><label>Awal<input id="start-range" type="range" min="0" max="100" step="0.1" value="0" disabled></label><label>Akhir<input id="end-range" type="range" min="0" max="100" step="0.1" value="100" disabled></label></div><p class="timeline-tip"><span>ⓘ</span> Geser pengatur awal dan akhir untuk memilih bagian terbaik.</p></div></div>
+        <div class="privacy-note"><span>♧</span><p><strong>Videomu tetap milikmu.</strong> Pratinjau diputar di perangkat. Saat ekspor, video diproses sementara di server dan hasil dihapus otomatis setelah 1 jam.</p></div>
+      </section>
+      <aside class="settings-card" aria-label="Pengaturan loop">
+        <div class="card-header"><span><span class="tiny-icon">☷</span> Pengaturan loop</span></div>
+        <div class="settings-body"><div class="section-label"><span class="step">01</span> Pilih rentang</div><div class="time-fields"><label>Waktu awal <div><input id="start" type="number" min="0" step="0.1" value="0.0" disabled><span>detik</span></div></label><span class="time-arrow">→</span><label>Waktu akhir <div><input id="end" type="number" min="0" step="0.1" value="0.0" disabled><span>detik</span></div></label></div><div class="duration-line">Durasi pilihan <strong id="clip-duration">—</strong></div>
+        <div class="divider"></div><div class="section-label"><span class="step">02</span> Atur pengulangan</div><div class="label-row"><label for="repeats">Jumlah putaran</label><span>1–30 kali</span></div><div class="repeat-presets"><button data-repeat="2" disabled>2×</button><button data-repeat="3" class="selected" disabled>3×</button><button data-repeat="5" disabled>5×</button><button data-repeat="10" disabled>10×</button></div><div class="stepper"><button id="minus" aria-label="Kurangi pengulangan" disabled>−</button><input id="repeats" type="number" min="1" max="30" value="3" aria-label="Jumlah putaran" disabled><span>kali</span><button id="plus" aria-label="Tambah pengulangan" disabled>＋</button></div><label class="toggle-row" for="mute"><span><strong>Tanpa suara</strong><small>Hilangkan audio dari video</small></span><input id="mute" type="checkbox" role="switch" disabled><span class="toggle"></span></label>
+        <div class="divider"></div><div class="section-label"><span class="step">03</span> Siap untuk disimpan</div><div class="summary"><div><span>Format hasil</span><strong>MP4 <span class="format-tag">H.264</span></strong></div><div><span>Total durasi</span><strong id="total-duration">—</strong></div><div><span>Kualitas</span><strong>Resolusi asli</strong></div></div><button id="export" class="button primary export-button" disabled><span>↓</span> Ekspor video</button><p id="export-hint" class="export-hint">Tanpa watermark. Tanpa ribet.</p><div id="export-status" class="export-status" role="status" hidden></div><a id="download" class="button download-button" hidden>↓ Unduh MP4</a>
+        </div>
+      </aside>
+    </div>
+    <div class="bottom-strip"><span class="bottom-infinity">∞</span><span>Dibuat untuk momen yang layak diulang.</span><span class="keyboard-hint"><kbd>Spasi</kbd> putar / jeda</span></div>
+    <div id="message" role="alert" class="message" hidden></div>
+  </main>
+  <footer><span>loopstudio <span>© 2026</span></span><span>Make it loop. Make it yours.</span></footer>
+</div><input id="file" type="file" accept="video/mp4,video/quicktime,video/webm,video/*" hidden>
+</body></html>

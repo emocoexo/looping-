@@ -1,12 +1,18 @@
-## Loop Studio 2.0 — Auto Seamless untuk Windows 10/11 64-bit
+## Loop Studio 2.0.1 — Auto Seamless untuk Windows 10/11 64-bit
 
-Unduh **Loop-Studio-Setup-2.0.0-win-x64.exe** pada bagian **Assets**, bukan **Source code**.
+Unduh **Loop-Studio-Setup-2.0.1-win-x64.exe** pada bagian **Assets**, bukan **Source code**.
 
 1. Keluar dari versi lama melalui ikon Loop Studio di system tray (dekat jam Windows).
 2. Buka installer, ikuti pemasangan, lalu buka shortcut **Loop Studio** di Desktop atau Start Menu.
 3. Pilih video → atur rentang → **Analisis video & audio** → pilih kandidat → **Buat pratinjau** → **Ekspor video** → **Unduh MP4**.
 
-### Fitur baru
+### Perbaikan launcher Windows
+- Waktu tunggu startup menjadi 90 detik, dengan pemeriksaan FFmpeg/FFprobe paralel.
+- Baris informasi sebelum alamat server tidak lagi menyebabkan kegagalan.
+- Detail kegagalan ditampilkan dan disimpan di `%LOCALAPPDATA%\Loop Studio\logs\launcher.log`.
+- Pengujian installer mencakup startup lambat, pesan tambahan, dan kegagalan server.
+
+### Fitur
 - Analisis lokal gambar, pencahayaan, pola gerakan, volume dan karakter audio; hingga lima kandidat titik sambung.
 - Mode seamless dengan transisi gambar/audio terpisah, loop biasa, dan ping-pong.
 - Pratinjau area sambungan yang benar-benar dirender, penggeseran satu frame, jumlah putaran atau target durasi.

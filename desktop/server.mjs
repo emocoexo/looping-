@@ -3,11 +3,11 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-for (const binary of ['ffmpeg', 'ffprobe']) {
+await Promise.all(['ffmpeg', 'ffprobe'].map(async binary => {
   const bundled = join(root, 'bin', `${binary}.exe`);
   if (process.platform === 'win32' && existsSync(bundled)) process.env[`${binary.toUpperCase()}_PATH`] = bundled;
-  await run(binary, ['-version'], 10000);
-}
+  await run(binary, ['-version'], 30000);
+}));
 // Desktop instances listen only on this computer and use an available port.
 const server = app.listen(0, '127.0.0.1', () => {
   console.log(`http://127.0.0.1:${server.address().port}`);

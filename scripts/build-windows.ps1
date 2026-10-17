@@ -49,13 +49,16 @@ try {
 
 @{ node = @{ url = $nodeUrl; sha256 = $nodeSha }; ffmpeg = @{ url = $ffmpegUrl; sha256 = $ffmpegSha } } | ConvertTo-Json -Depth 3 | Set-Content "$stage/provenance.json"
 $csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-$compilerOutput = & $csc /nologo /target:winexe /platform:x64 /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/out:$stage/Loop Studio.exe" 'desktop/Launcher.cs' 2>&1
+$launcherSource = (Resolve-Path 'desktop/Launcher.cs').Path
+$launcherPath = Join-Path $stage 'Loop Studio.exe'
+$compilerOutput = & $csc /nologo /target:winexe /platform:x64 /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/out:$launcherPath" $launcherSource 2>&1
 $compilerOutput | Write-Host
 if ($LASTEXITCODE -ne 0) { throw ('Windows launcher compilation failed: ' + ($compilerOutput -join ' | ')) }
 $version = (Get-Content 'package.json' -Raw | ConvertFrom-Json).version
 $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
 if (!(Test-Path $iscc)) { throw 'Inno Setup 6 is required to build the installer.' }
-& $iscc "/DAppVersion=$version" 'desktop/installer.iss'
+$installerScript = (Resolve-Path 'desktop/installer.iss').Path
+& $iscc "/DAppVersion=$version" $installerScript
 if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed.' }
 $installer = Get-Item "dist/Loop-Studio-Setup-$version-win-x64.exe"
 $checksum = (Get-FileHash $installer.FullName -Algorithm SHA256).Hash.ToLowerInvariant()

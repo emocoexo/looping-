@@ -2,7 +2,21 @@
 
 Aplikasi web berbahasa Indonesia untuk memilih bagian video, memutarnya berulang, dan mengunduh hasil MP4 tanpa watermark.
 
-## Menjalankan
+## Instal di Windows 10/11 64-bit
+
+Buka [halaman Releases](https://github.com/emocoexo/looping-/releases/latest), lalu unduh **Loop-Studio-Setup-1.1.0-win-x64.exe** pada bagian **Assets**. Jangan pilih **Source code**: itu kode untuk pengembang, bukan installer.
+
+1. Buka installer `.exe` yang diunduh dan ikuti langkah pemasangan.
+2. Jalankan shortcut **Loop Studio** di Desktop atau Start Menu. Aplikasi akan membuka browser secara otomatis.
+3. Pilih video, atur loop, lalu klik **Ekspor video** dan **Unduh MP4**.
+
+Node.js dan FFmpeg sudah disertakan. Tidak perlu terminal atau instalasi tambahan. Video diproses di komputer sendiri dan aplikasi bisa digunakan tanpa internet setelah dipasang. Untuk keluar, klik kanan ikon aplikasi di system tray dekat jam Windows → **Keluar**. Untuk menghapus aplikasi, gunakan **Settings → Apps → Loop Studio → Uninstall**.
+
+Installer belum ditandatangani dengan sertifikat Windows. Checksum unduhan tersedia pada `SHA256SUMS.txt` di rilis yang sama.
+
+Installer dibuat dan diuji pada runner Windows oleh [workflow Windows installer](https://github.com/emocoexo/looping-/actions/workflows/windows-release.yml). Workflow menerbitkan rilis hanya setelah pengujian ekspor, instalasi, launcher, uninstall, dan browser berhasil. Jika build masih berlangsung, tunggu hingga selesai sebelum membuka halaman Releases.
+
+## Menjalankan dari kode sumber (untuk pengembang)
 
 Prasyarat: Node.js 22 atau lebih baru, npm, serta `ffmpeg` dan `ffprobe` dengan encoder H.264 (`libx264`) dan AAC pada PATH. Lingkungan cloud ini telah diuji menggunakan Node.js 24 dan FFmpeg 7.1.
 
@@ -46,3 +60,15 @@ npm run test:browser
 - `test/`: pengujian integrasi dan browser.
 
 Setiap tugas cloud sudah terisolasi. Gunakan checkout yang tersedia; tidak perlu membuat Git worktree baru kecuali diminta.
+
+## Membuat installer Windows
+
+Di Windows 10/11 x64 dengan Node.js, .NET Framework 4.x, dan Inno Setup 6:
+
+```powershell
+npm ci
+./scripts/build-windows.ps1
+./scripts/test-windows.ps1
+```
+
+Script mengunduh runtime Node.js dan FFmpeg dari sumber resminya dengan pemeriksaan SHA-256, menyertakan dependensi produksi, mengompilasi launcher Windows, lalu membuat installer di `dist/`. Folder `.build/` dan `dist/` tidak dimasukkan ke Git; installer yang sudah lolos pengujian diterbitkan pada GitHub Releases. Layanan desktop hanya mendengarkan pada loopback dengan port otomatis. Launcher menyediakan ikon system tray untuk membuka browser atau menghentikan server beserta proses ekspornya.

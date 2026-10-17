@@ -1,6 +1,6 @@
 {
   "name": "loop-studio",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "Editor looping video lokal dengan ekspor MP4",
@@ -11,7 +11,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "test": "node --test test/*.test.js",
-    "test:browser": "node test/browser.mjs"
+    "test:browser": "node test/browser.mjs",
+    "start:desktop": "node desktop/server.mjs"
   },
   "dependencies": {
     "express": "^5.3.0",

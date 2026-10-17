@@ -15,7 +15,8 @@ const TTL = 60 * 60 * 1000;
 
 export function run(binary, args, timeout = 15 * 60 * 1000) {
   return new Promise((resolve, reject) => {
-    const child = spawn(binary, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const executable = binary === 'ffmpeg' ? (process.env.FFMPEG_PATH || binary) : binary === 'ffprobe' ? (process.env.FFPROBE_PATH || binary) : binary;
+    const child = spawn(executable, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true });
     let stdout = '', stderr = '';
     const timer = setTimeout(() => child.kill('SIGKILL'), timeout);
     child.stdout.on('data', data => { stdout = (stdout + data).slice(-100000); });

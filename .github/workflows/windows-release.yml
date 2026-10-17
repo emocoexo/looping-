@@ -1,0 +1,61 @@
+name: Windows installer
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'desktop/**'
+      - 'scripts/**'
+      - 'public/**'
+      - 'server.js'
+      - 'package*.json'
+      - 'test/**'
+      - '.github/workflows/windows-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: windows-release
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.22.0'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build self-contained installer
+        shell: pwsh
+        run: ./scripts/build-windows.ps1
+      - name: Test Windows exports and installed application
+        shell: pwsh
+        run: ./scripts/test-windows.ps1
+      - name: Test browser workflow
+        shell: pwsh
+        run: |
+          npx playwright install chromium
+          if ($LASTEXITCODE -ne 0) { throw 'Chromium installation failed.' }
+          $env:CHROMIUM_PATH = node --input-type=module -e "import { chromium } from 'playwright'; console.log(chromium.executablePath())"
+          $env:FFMPEG_PATH = Join-Path $PWD '.build/windows/app/bin/ffmpeg.exe'
+          $env:FFPROBE_PATH = Join-Path $PWD '.build/windows/app/bin/ffprobe.exe'
+          npm run test:browser
+          if ($LASTEXITCODE -ne 0) { throw 'Browser workflow failed.' }
+      - name: Keep installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Loop-Studio-Windows-x64
+          path: dist/*
+          if-no-files-found: error
+      - name: Publish installer to GitHub Releases
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = "windows-$version-build-${{ github.run_number }}"
+          gh release create $tag "dist/Loop-Studio-Setup-$version-win-x64.exe" "dist/SHA256SUMS.txt" --target "${{ github.sha }}" --title "Loop Studio $version - Windows 64-bit" --notes-file desktop/RELEASE_NOTES.md --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Publishing the installer failed.' }

@@ -21,19 +21,20 @@ jobs:
     runs-on: windows-2022
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '24.22.0'
           cache: npm
       - name: Install dependencies
-        run: npm ci
+        shell: pwsh
+        run: ./scripts/ci-step.ps1 install
       - name: Build self-contained installer
         shell: pwsh
-        run: ./scripts/build-windows.ps1
+        run: ./scripts/ci-step.ps1 build
       - name: Test Windows exports and installed application
         shell: pwsh
-        run: ./scripts/test-windows.ps1
+        run: ./scripts/ci-step.ps1 test
       - name: Test browser workflow
         shell: pwsh
         run: |

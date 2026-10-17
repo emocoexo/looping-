@@ -49,8 +49,9 @@ try {
 
 @{ node = @{ url = $nodeUrl; sha256 = $nodeSha }; ffmpeg = @{ url = $ffmpegUrl; sha256 = $ffmpegSha } } | ConvertTo-Json -Depth 3 | Set-Content "$stage/provenance.json"
 $csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-& $csc /nologo /target:winexe /platform:x64 /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/out:$stage/Loop Studio.exe" 'desktop/Launcher.cs'
-if ($LASTEXITCODE -ne 0) { throw 'Windows launcher compilation failed.' }
+$compilerOutput = & $csc /nologo /target:winexe /platform:x64 /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/out:$stage/Loop Studio.exe" 'desktop/Launcher.cs' 2>&1
+$compilerOutput | Write-Host
+if ($LASTEXITCODE -ne 0) { throw ('Windows launcher compilation failed: ' + ($compilerOutput -join ' | ')) }
 $version = (Get-Content 'package.json' -Raw | ConvertFrom-Json).version
 $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
 if (!(Test-Path $iscc)) { throw 'Inno Setup 6 is required to build the installer.' }

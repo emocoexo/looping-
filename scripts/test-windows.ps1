@@ -5,8 +5,10 @@ Set-Location $root
 $stage = Join-Path $root '.build/windows'
 $env:FFMPEG_PATH = "$stage/app/bin/ffmpeg.exe"
 $env:FFPROBE_PATH = "$stage/app/bin/ffprobe.exe"
-& "$stage/runtime/node.exe" --test test/export.test.js
-if ($LASTEXITCODE -ne 0) { throw 'Windows FFmpeg/API integration tests failed.' }
+$testFiles = @(Get-ChildItem 'test' -Filter '*.test.js' | ForEach-Object { $_.FullName })
+$testOutput = & "$stage/runtime/node.exe" --test @testFiles 2>&1
+$testOutput | Write-Host
+if ($LASTEXITCODE -ne 0) { throw ('Windows FFmpeg/API integration tests failed: ' + (($testOutput | Select-Object -Last 35) -join ' | ')) }
 
 $version = (Get-Content 'package.json' -Raw | ConvertFrom-Json).version
 $installPath = Join-Path $root '.build/installed'

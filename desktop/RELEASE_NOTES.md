@@ -1,11 +1,20 @@
-## Instal di Windows 10/11 64-bit
+## Loop Studio 2.0 — Auto Seamless untuk Windows 10/11 64-bit
 
-1. Unduh **Loop-Studio-Setup-1.1.0-win-x64.exe** pada bagian **Assets** di bawah.
-2. Buka file tersebut, ikuti langkah pemasangan, lalu buka shortcut **Loop Studio** di Desktop atau Start Menu.
-3. Aplikasi terbuka di browser. Pilih video, atur awal/akhir dan jumlah putaran, lalu klik **Ekspor video → Unduh MP4**.
+Unduh **Loop-Studio-Setup-2.0.0-win-x64.exe** pada bagian **Assets**, bukan **Source code**.
 
-**Tidak perlu memasang Node.js, FFmpeg, atau menjalankan perintah terminal.** Semua pemrosesan video berjalan di komputer sendiri, dan aplikasi dapat digunakan tanpa internet setelah terpasang.
+1. Keluar dari versi lama melalui ikon Loop Studio di system tray (dekat jam Windows).
+2. Buka installer, ikuti pemasangan, lalu buka shortcut **Loop Studio** di Desktop atau Start Menu.
+3. Pilih video → atur rentang → **Analisis video & audio** → pilih kandidat → **Buat pratinjau** → **Ekspor video** → **Unduh MP4**.
 
-Untuk keluar sepenuhnya, klik kanan ikon Loop Studio di system tray (dekat jam Windows), lalu pilih **Keluar**. Menutup tab browser tidak menghentikan aplikasi. Untuk menghapus, gunakan Settings → Apps → Loop Studio → Uninstall.
+### Fitur baru
+- Analisis lokal gambar, pencahayaan, pola gerakan, volume dan karakter audio; hingga lima kandidat titik sambung.
+- Mode seamless dengan transisi gambar/audio terpisah, loop biasa, dan ping-pong.
+- Pratinjau area sambungan yang benar-benar dirender, penggeseran satu frame, jumlah putaran atau target durasi.
+- Pemeriksaan durasi, timestamp audio/video, dan bagian gelap di sekitar sambungan.
+- Pemrosesan audio sebelum satu kali encoding AAC pada hasil akhir.
 
-Installer belum memiliki sertifikat penandatanganan Windows. SHA-256 unduhan disediakan dalam `SHA256SUMS.txt`. Pilih file installer `.exe`, bukan arsip **Source code**.
+**Tidak perlu API key, Node.js, FFmpeg terpisah, atau koneksi internet setelah instalasi.** Video diproses di komputer sendiri. Untuk keluar sepenuhnya, klik kanan ikon di system tray → **Keluar**.
+
+Skor adalah perkiraan, bukan jaminan seamless. Analisis memakai sampling (rentang 2 detik–5 menit, kandidat maksimal 30 detik); hasil perlu diperiksa secara visual dan didengarkan. Ekspor maksimal 60 menit, 30 fps, resolusi sampai setara 4K, unggahan maksimal 500 MB. Target durasi yang memotong siklus terakhir belum tentu menyambung kembali ke awal; gunakan jumlah putaran untuk siklus utuh.
+
+Installer belum memiliki sertifikat penandatanganan Windows. SHA-256 disediakan di `SHA256SUMS.txt`. Folder sementara dibersihkan setelah sekitar satu jam tanpa pemakaian, termasuk saat aplikasi dijalankan kembali; unduh hasil sebelum keluar.

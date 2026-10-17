@@ -1,9 +1,9 @@
 {
   "name": "loop-studio",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Editor looping video lokal dengan ekspor MP4",
+  "description": "Auto Seamless: analisis sambungan video/audio lokal dan ekspor MP4",
   "engines": {
     "node": ">=22"
   },

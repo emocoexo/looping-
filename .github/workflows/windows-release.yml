@@ -7,6 +7,7 @@ on:
       - 'scripts/**'
       - 'public/**'
       - 'server.js'
+      - 'lib/**'
       - 'package*.json'
       - 'test/**'
       - '.github/workflows/windows-release.yml'
@@ -43,10 +44,15 @@ jobs:
           $env:CHROMIUM_PATH = node --input-type=module -e "import { chromium } from 'playwright'; console.log(chromium.executablePath())"
           $env:FFMPEG_PATH = Join-Path $PWD '.build/windows/app/bin/ffmpeg.exe'
           $env:FFPROBE_PATH = Join-Path $PWD '.build/windows/app/bin/ffprobe.exe'
-          npm run test:browser
-          if ($LASTEXITCODE -ne 0) { throw 'Browser workflow failed.' }
+          $browserOutput = npm run test:browser 2>&1
+          $browserOutput | Write-Host
+          if ($LASTEXITCODE -ne 0) {
+            $detail = (($browserOutput | Select-Object -Last 30) -join ' | ')
+            Write-Host "::error title=Windows browser failed::$detail"
+            throw 'Browser workflow failed.'
+          }
       - name: Keep installer artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Loop-Studio-Windows-x64
           path: dist/*

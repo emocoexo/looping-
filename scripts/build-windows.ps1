@@ -38,7 +38,7 @@ New-Item -ItemType Directory -Force "$stage/licenses/ffmpeg" | Out-Null
 Get-ChildItem $ffmpegRoot | Where-Object { $_.Name -ne 'bin' } | Copy-Item -Destination "$stage/licenses/ffmpeg/" -Recurse
 
 Copy-Item 'server.js', 'package.json', 'package-lock.json' "$stage/app/"
-Copy-Item 'public' "$stage/app/" -Recurse
+Copy-Item 'public', 'lib' "$stage/app/" -Recurse
 Copy-Item 'desktop/server.mjs' "$stage/app/desktop/"
 Copy-Item 'desktop/THIRD_PARTY_NOTICES.md' "$stage/"
 Push-Location "$stage/app"

@@ -52,7 +52,13 @@ setTimeout(() => {
   [System.IO.File]::WriteAllText($serverPath, $originalServer)
   $env:PATH = $originalPath
 }
+$env:LOOP_STUDIO_EXE = Join-Path $installPath 'Loop Studio.exe'
+$env:FFMPEG_PATH = Join-Path $installPath 'app/bin/ffmpeg.exe'
+$env:FFPROBE_PATH = Join-Path $installPath 'app/bin/ffprobe.exe'
+$desktopOutput = & "$stage/runtime/node.exe" 'test/desktop.mjs' 2>&1
+$desktopOutput | Write-Host
+if ($LASTEXITCODE -ne 0) { throw ('Installed desktop UI tests failed: ' + (($desktopOutput | Select-Object -Last 40) -join ' | ')) }
 if (!(Test-Path "$installPath/app/bin/ffmpeg.exe")) { throw 'Installed FFmpeg is missing.' }
 $uninstall = Start-Process "$installPath/unins000.exe" -ArgumentList '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART' -PassThru -Wait
 if ($uninstall.ExitCode -ne 0) { throw 'Uninstaller failed.' }
-Write-Host 'PASS: Windows API/export, installer, native launcher readiness, and uninstaller.'
+Write-Host 'PASS: Windows API/export, installer, desktop window, slow startup, error diagnostics, video workflow, and uninstaller.'

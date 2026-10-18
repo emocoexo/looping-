@@ -21,7 +21,7 @@ app.use((_req,res,next)=>{
   res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','no-referrer');
   res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; media-src 'self' blob:; img-src 'self' blob: data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");next();
 });
-app.get('/api/health',(_req,res)=>res.json({status:'ok',version:'2.0.1'}));
+app.get('/api/health',(_req,res)=>res.json({status:'ok',version:'2.1.0'}));
 const upload=multer({dest:tmpdir(),limits:{fileSize:500*1024*1024,files:1,fields:16,fieldSize:1024}});
 function reserve(req,res,next){
   if(active>=2)return res.status(429).json({error:'Dua proses sedang berjalan. Coba kembali setelah selesai.'});

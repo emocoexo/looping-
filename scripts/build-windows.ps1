@@ -47,13 +47,18 @@ try {
   if ($LASTEXITCODE -ne 0) { throw 'Production dependency installation failed.' }
 } finally { Pop-Location }
 
-@{ node = @{ url = $nodeUrl; sha256 = $nodeSha }; ffmpeg = @{ url = $ffmpegUrl; sha256 = $ffmpegSha } } | ConvertTo-Json -Depth 3 | Set-Content "$stage/provenance.json"
-$csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-$launcherSource = (Resolve-Path 'desktop/Launcher.cs').Path
-$launcherPath = Join-Path $stage 'Loop Studio.exe'
-$compilerOutput = & $csc /nologo /target:winexe /platform:x64 /optimize+ /reference:System.Windows.Forms.dll /reference:System.Drawing.dll "/out:$launcherPath" $launcherSource 2>&1
-$compilerOutput | Write-Host
-if ($LASTEXITCODE -ne 0) { throw ('Windows launcher compilation failed: ' + ($compilerOutput -join ' | ')) }
+$electronVersion = '44.9.0'
+$electronUrl = "https://github.com/electron/electron/releases/download/v$electronVersion/electron-v$electronVersion-win32-x64.zip"
+$electronSha = '88e08039d0ef359bab9f674e8051fa103bd8628ea7c5a5e1daaa610a8a0c6931'
+$electronZip = Join-Path $cache "electron-v$electronVersion-win32-x64.zip"
+Get-VerifiedArchive $electronUrl $electronZip $electronSha
+Expand-Archive $electronZip -DestinationPath $stage -Force
+Rename-Item "$stage/electron.exe" 'Loop Studio.exe'
+Remove-Item "$stage/resources/default_app.asar" -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force "$stage/resources/app" | Out-Null
+Copy-Item 'desktop/main.cjs', 'desktop/loading.html' "$stage/resources/app/"
+@{ name = 'loop-studio-desktop'; version = '2.1.0'; main = 'main.cjs' } | ConvertTo-Json | Set-Content "$stage/resources/app/package.json" -Encoding utf8
+@{ node = @{ url = $nodeUrl; sha256 = $nodeSha }; ffmpeg = @{ url = $ffmpegUrl; sha256 = $ffmpegSha }; electron = @{ url = $electronUrl; sha256 = $electronSha } } | ConvertTo-Json -Depth 3 | Set-Content "$stage/provenance.json"
 $version = (Get-Content 'package.json' -Raw | ConvertFrom-Json).version
 $iscc = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
 if (!(Test-Path $iscc)) { throw 'Inno Setup 6 is required to build the installer.' }
